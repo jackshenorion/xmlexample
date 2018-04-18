@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process-config name="Hong Kong Derivatives to DCASS Converter" version="$Revision: 203834 $">
+
+    <input name="g1" className="com.smartsgroup.tools.convertfw.io.RecoveringFAVInputStream">
+        <archiveOnly>true</archiveOnly>
+        <filePattern>
+            <marketCode>dcass</marketCode>
+            <midfix>.G1</midfix>
+            <format>fav</format>
+        </filePattern>
+    </input>
+
+    <input name="g2" className="com.smartsgroup.tools.convertfw.io.RecoveringFAVInputStream">
+        <archiveOnly>true</archiveOnly>
+        <filePattern>
+            <marketCode>dcass</marketCode>
+            <midfix>.G2</midfix>
+            <format>fav</format>
+        </filePattern>
+    </input>
+
+    <input name="ocqInput" className="com.smartsgroup.connectors.ginetgw.omgw.input.OmnetProcessInput">
+        <property name="version">HKEX_V1</property>
+        <property name="messageFactory">com.smartsgroup.connectors.omnet.messages.HkOmnetMessageFactory</property>
+        <archiveOnly>true</archiveOnly>
+        <filePattern>
+            <marketCode>dcass</marketCode>
+            <midfix>.OCQ</midfix>
+            <format>srf</format>
+        </filePattern>
+    </input>
+
+    <input name="ocqT1Input" className="com.smartsgroup.connectors.ginetgw.omgw.input.OmnetProcessInput">
+        <property name="version">HKEX_V1</property>
+        <property name="messageFactory">com.smartsgroup.connectors.omnet.messages.HkOmnetMessageFactory</property>
+        <archiveOnly>true</archiveOnly>
+        <optional>true</optional>
+        <filePattern>
+            <marketCode>dcass</marketCode>
+            <midfix>.OCQ.T1</midfix>
+            <format>srf</format>
+        </filePattern>
+    </input>
+
+    <input name="ocqT2Input" className="com.smartsgroup.connectors.ginetgw.omgw.input.OmnetProcessInput">
+        <property name="version">HKEX_V1</property>
+        <property name="messageFactory">com.smartsgroup.connectors.omnet.messages.HkOmnetMessageFactory</property>
+        <archiveOnly>true</archiveOnly>
+        <optional>true</optional>
+        <filePattern>
+            <marketCode>dcass</marketCode>
+            <midfix>.OCQ.T2</midfix>
+            <format>srf</format>
+        </filePattern>
+    </input>
+
+    <sequence name="mainSequence" input="g1" output="devNull">
+        <feedlet className="com.smartsgroup.connectors.hkdcasstgw.GiveUpFeedlet">
+            <property name="ocqInput">ocqInput</property>
+            <property name="ocqT1Input">ocqT1Input</property>
+            <property name="ocqT2Input">ocqT2Input</property>
+            <property name="g2Input">g2</property>
+        </feedlet>
+        <feedlet className="com.smartsgroup.lib.sqlite.SqlLoaderFeedlet">
+            <property name="indexName">MATCH_ID_EXECUTION_EVENT_NBR_STR_INDEX</property>
+            <property name="indexedColumns">BASEAPI_MATCH_ID_EXECUTION_EVENT_NBR_STR</property>
+            <property name="dbFile">giveup_ca11.sqlite</property>
+            <property name="inputBean">com.smartsgroup.connectors.hkdcasstgw.lookup.CA11ItemSql</property>
+            <property name="type">daily</property>
+            <property name="outputMarket">dcass</property>
+        </feedlet>
+    </sequence>
+
+    <output name="devNull" className="com.smartsgroup.tools.convertfw.DevNullProcessOutput">
+        <filePattern>
+            <marketCode>dcass</marketCode>
+            <midfix>dummy</midfix>
+            <format>fav</format>
+        </filePattern>
+    </output>
+
+</process-config>
