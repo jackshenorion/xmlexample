@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ test_processqueue_ranges_single_archive.xml
+  ~
+  ~ $Id: test_processqueue_ranges_single_archive.xml 229453 2014-07-24 04:02:20Z stfsch $
+  ~
+  ~ Copyright (c) 2003-2014 by SMARTS Group - A NASDAQ OMX Company.
+  ~ All Rights Reserved.
+  ~
+  ~ GPO Box 2985, Sydney NSW 2001, Australia
+  ~
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of
+  ~ the SMARTS Group. You shall not disclose such Confidential Information
+  ~ and shall use it only in accordance with the terms of the license
+  ~ agreement you entered into with SMARTS Group.
+  ~
+  ~ Parts of this work are derived from or based on original
+  ~ software copyright from SMARTS Limited, used with permission.
+  -->
+
+<process-config name="Example Config" version="Example Version">
+    <allowConcurrentProcessing>false</allowConcurrentProcessing>
+    <realTimePrecedence>false</realTimePrecedence>
+    <firstDate>2011-01-03</firstDate>
+    <range>
+        <lastDate>2011-01-03</lastDate>
+        <input name="rawIn" className="some.sort.of.InputStream">
+            <filePattern>
+                <marketCode>test_queue</marketCode>
+                <midfix></midfix>
+                <format>raw</format>
+            </filePattern>
+        </input>
+        <sequence input="rawIn" output="favOut">
+            <feedlet className="some.sort.of.Feedlet">
+            </feedlet>
+        </sequence>
+        <output name="favOut" className="some.sort.of.OutputStream">"
+            <filePattern>
+                <marketCode>test_queue</marketCode>
+                <midfix>.a</midfix>
+                <format>raw</format>
+            </filePattern>
+        </output>
+    </range>
+    <range>
+        <lastDate>2011-01-04</lastDate>
+        <input name="rawIn" className="some.sort.of.InputStream">
+            <filePattern>
+                <marketCode>test_queue</marketCode>
+                <midfix></midfix>
+                <format>raw</format>
+            </filePattern>
+        </input>
+        <sequence input="rawIn" output="favOut">
+            <feedlet className="some.sort.of.Feedlet">
+            </feedlet>
+        </sequence>
+        <output name="favOut" className="some.sort.of.OutputStream">"
+            <filePattern>
+                <marketCode>test_queue</marketCode>
+                <midfix>.b</midfix>
+                <format>raw</format>
+            </filePattern>
+        </output>
+    </range>
+</process-config>
