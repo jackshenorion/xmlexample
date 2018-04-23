@@ -33,4 +33,11 @@ public class DomParser {
         }
 
     }
+
+    public static Document getDOM(String path) throws IOException, SAXException, ParserConfigurationException {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        return documentBuilder.parse(path);
+    }
+
 }
